@@ -27,7 +27,7 @@
 - [EVIDENCE_CORRELATION_ID_SCREENSHOT]: [Path to image]
 - [EVIDENCE_PII_REDACTION_SCREENSHOT]: [Path to image]
 - [EVIDENCE_TRACE_WATERFALL_SCREENSHOT]: [Path to image]
-- [TRACE_WATERFALL_EXPLANATION]: (Briefly explain one interesting span in your trace)
+- [TRACE_WATERFALL_EXPLANATION]: Trace hiển thị rõ ràng mối quan hệ cha-con: `agent-run` bao bọc `retrieval` và `llm-generation`. Cấu trúc này giúp xác định chính xác bước nào trong pipeline gây ra độ trễ hoặc lỗi (ví dụ: phân biệt chậm do truy vấn dữ liệu hay chậm do Model phản hồi).
 
 ### 3.2 Dashboard & SLOs
 - [DASHBOARD_6_PANELS_SCREENSHOT]: [Path to image]
@@ -69,8 +69,8 @@
 - [EVIDENCE_LINK]: (Link to specific commit or PR)
 
 ### [MEMBER_B_NAME]
-- [TASKS_COMPLETED]: 
-- [EVIDENCE_LINK]: 
+- [TASKS_COMPLETED]: Tích hợp Langfuse Tracing vào FastAPI; triển khai nested spans cho Retrieval và Generation để tạo hệ thống phân cấp trace; cấu hình Generation type để theo dõi model và token usage; gắn tags (lab, feature, model) và metadata (correlation_id, doc_count) để làm giàu dữ liệu quan sát.
+- [EVIDENCE_LINK]: Modified `app/tracing.py`, `app/agent.py`, `app/mock_rag.py`, `app/mock_llm.py`, and `app/main.py`.
 
 ### [MEMBER_C_NAME]
 - [TASKS_COMPLETED]: 
