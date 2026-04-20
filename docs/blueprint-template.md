@@ -45,11 +45,20 @@
 ---
 
 ## 4. Incident Response (Group)
-- [SCENARIO_NAME]: (e.g., rag_slow)
-- [SYMPTOMS_OBSERVED]: 
-- [ROOT_CAUSE_PROVED_BY]: (List specific Trace ID or Log Line)
-- [FIX_ACTION]: 
-- [PREVENTIVE_MEASURE]: 
+
+### Kịch bản 1: RAG phản hồi chậm
+- [SCENARIO_NAME]: rag_slow
+- [SYMPTOMS_OBSERVED]: Độ trễ (Latency) tăng đột biến từ ~150ms lên hơn 13.000ms (13 giây).
+- [ROOT_CAUSE_PROVED_BY]: Dòng log ghi nhận Correlation ID `req-8efb98a5` với `latency_ms` là 10624.0ms và `req-ef5b87d7` là 13277.8ms.
+- [FIX_ACTION]: Tắt cờ sự cố rag_slow bằng lệnh scripts/inject_incident.py --disable.
+- [PREVENTIVE_MEASURE]: Thiết lập SLO cho độ trễ P95 và cấu hình cảnh báo (alerts) khi việc truy xuất RAG vượt quá 2000ms.
+
+### Kịch bản 2: Lỗi hệ thống (Tool Failure)
+- [SCENARIO_NAME]: tool_fail
+- [SYMPTOMS_OBSERVED]: 100% yêu cầu trả về lỗi HTTP 500 (Internal Server Error).
+- [ROOT_CAUSE_PROVED_BY]: Log ghi nhận event "request_failed" (Mã lỗi 500) với Correlation ID trả về là `None` do lỗi ngắt mạch xử lý.
+- [FIX_ACTION]: Tắt cờ sự cố tool_fail bằng lệnh scripts/inject_incident.py --disable.
+- [PREVENTIVE_MEASURE]: Triển khai cơ chế Circuit Breaker (ngắt mạch) hoặc Fallback (dự phòng) để tránh gây sập toàn bộ hệ thống.
 
 ---
 
@@ -71,8 +80,8 @@
 - [EVIDENCE_LINK]: 
 
 ### [MEMBER_D_NAME]
-- [TASKS_COMPLETED]: 
-- [EVIDENCE_LINK]: 
+- [TASKS_COMPLETED]: Thực hiện load test (cơ bản và song song), giả lập các sự cố hiệu năng và hệ thống (rag_slow, tool_fail), xác nhận phục hồi hệ thống và cung cấp dữ liệu log cho việc xây dựng dashboard.
+- [EVIDENCE_LINK]: Thực thi trực tiếp các script scripts/load_test.py và scripts/inject_incident.py trên máy cục bộ.
 
 ### [MEMBER_E_NAME]
 - [TASKS_COMPLETED]: 
