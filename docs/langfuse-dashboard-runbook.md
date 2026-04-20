@@ -1,4 +1,4 @@
-# Langfuse Dashboard Runbook (Lab13 Team61)
+# Langfuse Dashboard Runbook (Lab13 Team 25)
 
 ## Goal
 
@@ -41,7 +41,7 @@ You should see **>= 10 traces** in Langfuse after this.
 4. Name it:
 
 ```text
-Lab13 Team61 - Layer 2 Dashboard
+Lab13 Team 25 - Layer 2 Dashboard
 ```
 
 5. Set:

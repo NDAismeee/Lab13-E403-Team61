@@ -42,7 +42,7 @@ export function App() {
     <div className="page">
       <header className="header">
         <div className="titleBlock">
-          <div className="title">Lab13 Team61 — Layer 2 Dashboard</div>
+          <div className="title">Lab13 Team 25 — Layer 2 Dashboard</div>
           <div className="subtitle">
             Default range: last {windowMinutes} minutes • Auto-refresh: {Math.round(REFRESH_MS / 1000)}s • {status}
           </div>
