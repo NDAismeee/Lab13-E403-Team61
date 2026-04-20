@@ -139,6 +139,8 @@ def build_dashboard_series(
             b["tokens_out"] += tokens_out
 
         q = rec.get("quality_score")
+        if q is None and isinstance(rec.get("payload"), dict):
+            q = rec["payload"].get("quality_score")
         if isinstance(q, (int, float)):
             b["qualities"].append(float(q))
 
