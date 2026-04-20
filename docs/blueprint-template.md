@@ -6,7 +6,7 @@
 - [GROUP_NAME]: 
 - [REPO_URL]: 
 - [MEMBERS]:
-  - Member A: [Name] | Role: Logging & PII
+  - Member A: [Hieu] | Role: Logging & PII
   - Member B: [Name] | Role: Tracing & Enrichment
   - Member C: [Name] | Role: SLO & Alerts
   - Member D: [Name] | Role: Load Test & Dashboard
@@ -55,9 +55,12 @@
 
 ## 5. Individual Contributions & Evidence
 
-### [MEMBER_A_NAME]
-- [TASKS_COMPLETED]: 
-- [EVIDENCE_LINK]: (Link to specific commit or PR)
+### Hieu
+- [TASKS_COMPLETED]:
+  - Hoàn thiện logging theo chuẩn JSON, enrich đầy đủ context (correlation_id, user_id_hash, session_id, feature, model, env...)
+  - Thêm PII scrubber vào pipeline để tự động ẩn thông tin nhạy cảm (email, số điện thoại, CCCD, thẻ tín dụng, passport, địa chỉ...)
+  - Đảm bảo mọi log đều được enrich và scrub đúng, pass validate_logs.py
+- [EVIDENCE_LINK]: https://github.com/HIEU-ntp/Lab13-Observability/commit/[commit_hash_logging_pii]
 
 ### [MEMBER_B_NAME]
 - [TASKS_COMPLETED]: 
