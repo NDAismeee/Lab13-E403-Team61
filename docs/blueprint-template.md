@@ -6,11 +6,11 @@
 - [GROUP_NAME]: 
 - [REPO_URL]: 
 - [MEMBERS]:
-  - Member A: [Name] | Role: Logging & PII
-  - Member B: [Name] | Role: Tracing & Enrichment
-  - Member C: [Name] | Role: SLO & Alerts
-  - Member D: [Name] | Role: Load Test & Dashboard
-  - Member E: [Name] | Role: Demo & Report
+  - Member A: [Hieu] | Role: Logging & PII
+  - Member B: [Vinh] | Role: Tracing & Enrichment
+  - Member C: [Dung] | Role: SLO & Alerts
+  - Member D: [Hai] | Role: Load Test 
+  - Member E: [Duc Anh] | Role: Demo & Dashboard
 
 ---
 
@@ -24,8 +24,8 @@
 ## 3. Technical Evidence (Group)
 
 ### 3.1 Logging & Tracing
-- [EVIDENCE_CORRELATION_ID_SCREENSHOT]: [Path to image]
-- [EVIDENCE_PII_REDACTION_SCREENSHOT]: [Path to image]
+- [EVIDENCE_CORRELATION_ID_SCREENSHOT]: [Day13/Lab13-Observability/screenshot/EVIDENCE_CORRELATION_ID_SCREENSHOT.png]
+- [EVIDENCE_PII_REDACTION_SCREENSHOT]: [Day13/Lab13-Observability/screenshot/EVIDENCE_PII_REDACTION_SCREENSHOT.png]
 - [EVIDENCE_TRACE_WATERFALL_SCREENSHOT]: [Path to image]
 - [TRACE_WATERFALL_EXPLANATION]: (Briefly explain one interesting span in your trace)
 
@@ -64,9 +64,13 @@
 
 ## 5. Individual Contributions & Evidence
 
-### [MEMBER_A_NAME]
-- [TASKS_COMPLETED]: 
-- [EVIDENCE_LINK]: (Link to specific commit or PR)
+### Hieu
+- [TASKS_COMPLETED]:
+  - Cấu hình logging chuẩn JSON cho toàn bộ app.
+  - Enrich log với các trường context: correlation_id, user_id_hash, session_id, feature, model, env...
+  - Triển khai và tích hợp PII scrubber để tự động ẩn thông tin nhạy cảm (email, số điện thoại, CCCD, thẻ tín dụng, passport, địa chỉ...).
+  - Đảm bảo mọi log đều được enrich và scrub đúng, pass validate_logs.py.
+- [EVIDENCE_LINK]: https://github.com/VinUni-AI20k/Lab13-Observability/commit/26195f4c93f0b409b1198cb2a5a46953ce26130e
 
 ### [MEMBER_B_NAME]
 - [TASKS_COMPLETED]: 
