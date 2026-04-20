@@ -6,6 +6,11 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from structlog.contextvars import bind_contextvars
 
+try:
+    from dotenv import load_dotenv
+except Exception:  # pragma: no cover
+    load_dotenv = None
+
 from .agent import LabAgent
 from .incidents import disable, enable, status
 from .logging_config import configure_logging, get_logger
@@ -13,7 +18,10 @@ from .metrics import record_error, snapshot
 from .middleware import CorrelationIdMiddleware
 from .pii import hash_user_id, summarize_text
 from .schemas import ChatRequest, ChatResponse
-from .tracing import tracing_enabled
+from .tracing import get_tracing_status, observe, safe_flush, safe_update_current_observation
+
+if load_dotenv is not None:
+    load_dotenv()
 
 configure_logging()
 log = get_logger()
@@ -24,6 +32,7 @@ agent = LabAgent()
 
 @app.on_event("startup")
 async def startup() -> None:
+    tracing = get_tracing_status()
     log.info(
         "app_started",
         service=os.getenv("APP_NAME", "day13-observability-lab"),
@@ -33,13 +42,25 @@ async def startup() -> None:
         session_id=None,
         feature=None,
         model=None,
-        payload={"tracing_enabled": tracing_enabled()},
+        payload={"tracing": tracing},
     )
 
 
 @app.get("/health")
 async def health() -> dict:
-    return {"ok": True, "tracing_enabled": tracing_enabled(), "incidents": status()}
+    public_key = os.getenv("LANGFUSE_PUBLIC_KEY", "")
+    return {
+        "ok": True,
+        "tracing": get_tracing_status(),
+        "langfuse_base_url": os.getenv("LANGFUSE_BASE_URL"),
+        "langfuse_public_key_prefix": public_key[:12] if public_key else None,
+        "incidents": status(),
+    }
+
+
+@app.on_event("shutdown")
+async def shutdown() -> None:
+    safe_flush()
 
 
 @app.get("/metrics")
@@ -48,6 +69,7 @@ async def metrics() -> dict:
 
 
 @app.post("/chat", response_model=ChatResponse)
+@observe(name="http-chat")
 async def chat(request: Request, body: ChatRequest) -> ChatResponse:
     # Enrich logs with request context (user_id_hash, session_id, feature, model, env)
     bind_contextvars(
@@ -68,6 +90,16 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
         model=getattr(agent, "model", None),
         env=os.getenv("APP_ENV", "dev"),
         payload={"message_preview": summarize_text(body.message)},
+    )
+
+    safe_update_current_observation(
+        tags=["lab", body.feature, getattr(agent, "model", "unknown")],
+        metadata={
+            "correlation_id": request.state.correlation_id,
+            "feature": body.feature,
+            "environment": os.getenv("APP_ENV", "dev"),
+        },
+        input={"message_preview": summarize_text(body.message)},
     )
     try:
         result = agent.run(
@@ -104,6 +136,19 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
     except Exception as exc:  # pragma: no cover
         error_type = type(exc).__name__
         record_error(error_type)
+        incidents = status()
+        safe_update_current_observation(
+            tags=["error", "lab", body.feature, getattr(agent, "model", "unknown")],
+            metadata={
+                "error_type": error_type,
+                "correlation_id": request.state.correlation_id,
+                "feature": body.feature,
+                "environment": os.getenv("APP_ENV", "dev"),
+                "incident_rag_slow": incidents.get("rag_slow", False),
+                "incident_tool_fail": incidents.get("tool_fail", False),
+                "incident_cost_spike": incidents.get("cost_spike", False),
+            },
+        )
         log.error(
             "request_failed",
             service="api",
@@ -117,6 +162,8 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
             payload={"detail": str(exc), "message_preview": summarize_text(body.message)},
         )
         raise HTTPException(status_code=500, detail=error_type) from exc
+    finally:
+        safe_flush()
 
 
 @app.post("/incidents/{name}/enable")

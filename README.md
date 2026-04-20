@@ -22,7 +22,7 @@ This template is intentionally incomplete. Teams are expected to finish TODOs du
 4. **Sanitize Data**: Implement the PII scrubber in `app/logging_config.py`.
 5. **Verify with Script**: Run `python scripts/validate_logs.py` to check your progress.
 6. **Tracing**: Send 10-20 requests and verify traces in Langfuse (ensure `observe` decorator is used).
-7. **Dashboards**: Build your 6-panel dashboard from exported metrics.
+7. **Dashboards**: Build your 6-panel dashboard directly in **Langfuse custom dashboards**.
 8. **Alerting**: Configure alert rules in `config/alert_rules.yaml` and test them.
 
 ## Quick start
@@ -40,6 +40,9 @@ uvicorn app.main:app --reload
 ```bash
 # Generate requests (use --concurrency 5 to test parallel bottlenecks)
 python scripts/load_test.py --concurrency 5
+
+# Generate mixed incident traffic for Langfuse dashboards (>= 10 traces)
+python scripts/generate_dashboard_demo.py --traces 14
 
 # Inject failures live
 python scripts/inject_incident.py --scenario rag_slow
