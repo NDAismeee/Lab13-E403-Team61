@@ -18,7 +18,7 @@ except Exception:  # pragma: no cover
         def update_current_observation(self, **kwargs: Any) -> None:
             return None
 
-        def update_current_span(self, **kwargs: Any) -> None:
+        def score_current_observation(self, **kwargs: Any) -> None:
             return None
 
     langfuse_context = _DummyContext()
